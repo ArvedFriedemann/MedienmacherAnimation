@@ -12,10 +12,53 @@ animateMain = putStrLn "Animating..." >> (reanimate  $ animation)
 
 animation :: Animation
 animation = env $ scene $ do
+  symbols <- mapM oNew equation_symbs
+  mapM_ oShow symbols
+  symbols2 <- mapM oNew equation_symbs2
+  case (symbols, symbols2) of
+    ([a,x,b,eq,a',b',x'],[a2,x2,b2,eq2,a'2,b'2,x'2]) -> do
+      --fork $ oShowWith x oScaleOut
+      --fork $ oShowWith x' oScaleOut
+      --fork $ oTransform x x2 1
+      --oModify a (& oTopY .~ 3)
+      oTweenS a 1 $ \t -> do
+        oTopY %= \origin ->
+          fromToS origin screenTop t
+
+      fork $ oHideWith x oScaleOut
+      fork $ oShowWith x2 oScaleIn
+      fork $ oHideWith x' oScaleOut
+      fork $ oShowWith x'2 oScaleIn
+    (l,_) -> error $ "list length is " ++ show (length l)
+  wait 1
+
+equation :: SVG
+equation =  translate 3 3 $ scale 2 $ center $
+  latexAlign "a\\ X\\ bc = a\\ bc\\ X"
+
+equation2 :: SVG
+equation2 = scale 2 $ center $
+  latexAlign "a\\ bc\\ bc = a\\ bc\\ bc"
+
+equation_symbs :: [SVG]
+equation_symbs = [snd $ splitGlyphs i equation | i <- [[0],[1],[2,3],[4],[5],[6,7],[8]]]
+
+equation_symbs2 :: [SVG]
+equation_symbs2 = [snd $ splitGlyphs i equation2 | i <- [[0],[1,2],[3,4],[5],[6],[7,8],[9,10]]]
+
+env :: Animation -> Animation
+env = addStatic bg
+
+bg :: SVG
+bg = mkBackground "lightblue"
+
+
+{-
+animation :: Animation
+animation = env $ scene $ do
   symbols <- mapM oNew
     [symb_e, symb_eq, symb_m, symb_c2]
   mapM_ oShow symbols
-
   forM_ (zip symbols yPositions) $
     \(obj, yPos) -> do
     fork $ oTweenS obj 1 $ \t -> do
@@ -55,3 +98,5 @@ env = addStatic bg
 
 bg :: SVG
 bg = mkBackground "lightblue"
+
+-}
