@@ -21,9 +21,8 @@ animation = env $ scene $ do
       --fork $ oShowWith x' oScaleOut
       --fork $ oTransform x x2 1
       --oModify a (& oTopY .~ 3)
-      oTweenS a 1 $ \t -> do
-        oTopY %= \origin ->
-          fromToS origin screenTop t
+      moveAbsPerc a 1 (0.1,0.1)
+      moveAbsPerc b 1 (0.2,0.2)
 
       fork $ oHideWith x oScaleOut
       fork $ oShowWith x2 oScaleIn
@@ -31,6 +30,11 @@ animation = env $ scene $ do
       fork $ oShowWith x'2 oScaleIn
     (l,_) -> error $ "list length is " ++ show (length l)
   wait 1
+
+moveAbsPerc :: Object s a -> Duration -> (Double, Double) -> Scene s ()
+moveAbsPerc obj d (rx, ry) = oTweenS obj d $ \t -> do
+  oLeftX %= \origin -> fromToS origin (screenLeft + screenWidth * rx) t
+  oTopY %= \origin -> fromToS origin (screenTop - screenHeight * ry) t
 
 equation :: SVG
 equation =  translate 3 3 $ scale 2 $ center $
