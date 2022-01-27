@@ -52,9 +52,15 @@ initialProblem = scene $ do
   (sentr, sentx) <- oNewTup $ splitGlyphs [12] $
     svgTranslateTopLeftPerc (0,0) $
     stdLaTeX $ "sentence\\ (the\\ X\\ Y)?"
-  fork $ oHide sent4
-  oShow sentr
-  --oShow sentx
+  (ruler, rulex) <- oNewTup $ splitGlyphs [12] $
+    svgTranslateTopLeftPerc (0,lineThicknessThin) $
+    stdLaTeX $ "sentence\\ (the\\ X\\ Y)\\ \\vdash"
+  (tailr, tailx) <- oNewTup $ splitGlyphs [0] $
+    svgTranslateTopLeftPerc (lineThicknessThin,lineThicknessThin*2) $
+    stdLaTeX $ "X\\ is\\ a\\ noun,\\ Y\\ is\\ a\\ verb"
+  mapM oHide [sent3,sent4,sent5]
+  mapM oShow [sentr,sentx,ruler,rulex, tailr, tailx]
+  mapM (fork . flip oShowWith wiggleAnim) [sentx,rulex,tailx]
 
 
   wait 10
