@@ -164,8 +164,6 @@ initialProblem = scene $ do
   moveAbsPerc sent6 1 (0.12,0.4)
 
 
-  wait 10
-
 --magic 0.5 is the standart margin. UNSAFE! TODO
 svgTranslateTopLeftPerc :: (Double, Double) -> SVG -> SVG
 svgTranslateTopLeftPerc (rx, ry) svg =
