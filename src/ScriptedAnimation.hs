@@ -17,8 +17,6 @@ initialProblem = scene $ do
   driv <- oNew $ stdLaTeX "drives\\ is\\ a\\ verb"
   sent <- oNew $ stdLaTeX $ "&sentence\\ (the\\ X\\ Y)\\ \\vdash\\\\ &\\qquad X\\ is\\ a\\ noun,\\ Y\\ is\\ a\\ verb"
   let lst = [bird,pers, flyi,driv,sent]
-  let lineThicknessThin = 0.12
-  let lineThicknessThick = 0.15
   forM (zip (init lst) [0..]) $ \(o,i) ->
     setTopLeftPerc (0,i*lineThicknessThin) o
   let lastPos = (0,((fromIntegral $ length lst) - 1)*lineThicknessThin + lineThicknessThick)
@@ -161,28 +159,70 @@ initialProblem = scene $ do
   oShow sent6
   mapM oHide [sentr2y,sentx2y]
   wait 1
-  moveAbsPerc sent6 1 (0.12,0.4)
+  moveCenterAbsPerc sent6 1 (0.5,0.5)
 
 
---magic 0.5 is the standart margin. UNSAFE! TODO
-svgTranslateTopLeftPerc :: (Double, Double) -> SVG -> SVG
-svgTranslateTopLeftPerc (rx, ry) svg =
-  translate (-minx-(screenWidth/2)+(screenWidth*rx)+0.5) (-miny+(screenHeight/2)-(screenHeight*ry)-height-0.5) svg
-  where
-    (minx,miny,width,height) = boundingBox svg
-    (x,y) = relCoords (rx, ry)
+interlude :: Animation
+interlude = scene $ do
+  sent1 <- oNew $ stdLaTeX $ "sentence\\ (the\\ bird\\ flies)."
+  setCenterPerc (0.5,0.5) sent1
+  oShow sent1
 
-relCoords :: (Double, Double) -> (Double, Double)
-relCoords (x,y) = (screenLeft + screenWidth * x, screenTop - screenHeight * y)
+  moveCenterAbsPerc sent1 1 (0.5,0.5-lineThicknessThin)
 
-setTopLeftPerc :: (Double, Double) -> Object s a -> Scene s ()
-setTopLeftPerc (rx,ry) obj = oModifyS obj $ do
-  let (x,y) = relCoords (rx,ry)
-  oLeftX .= x
-  oTopY .= y
+  sent2 <- oNew $ stdLaTeX $ "sentence\\ (the\\ person\\ drives)."
+  setCenterPerc (0.5,0.5) sent2
+  oShowWith sent2 oFadeIn
 
-oNewTup :: (SVG,SVG) -> Scene s (Object s SVG, Object s SVG)
-oNewTup (a,b) = do
-  ao <- oNew a
-  bo <- oNew b
-  return (ao,bo)
+  waitOn $ do
+    fork $ moveCenterAbsPerc sent2 1 (0.5,0.5-lineThicknessThin)
+    fork $ moveCenterAbsPerc sent1 1 (0.5,0.5-lineThicknessThin*2)
+
+  sent3 <- oNew $ stdLaTeX $ "sentence\\ (the\\ person\\ flies)."
+  setCenterPerc (0.5,0.5) sent3
+  oShowWith sent3 oFadeIn
+
+  waitOn $ do
+    fork $ moveCenterAbsPerc sent3 1 (0.5,0.5-lineThicknessThin)
+    fork $ moveCenterAbsPerc sent2 1 (0.5,0.5-lineThicknessThin*2)
+    fork $ moveCenterAbsPerc sent1 1 (0.5,0.5-lineThicknessThin*3)
+
+  sent4 <- oNew $ withColor "salmon" $ stdLaTeX $ "sentence\\ (the\\ bird\\ drives)."
+  setCenterPerc (0.5,0.5) sent4
+  oShowWith sent4 oFadeIn
+  waitOn $ mapM (fork . flip oHideWith oFadeOut) [sent1,sent2,sent3]
+
+checkExample :: Animation
+checkExample = scene $ do
+  sentr <- oNew $
+    fst $ splitGlyphs [9..12] $
+    svgTranslateTopLeftPerc (0.1,0) $
+    stdLaTeX $ "sentence\\ (bird\\ the\\ flies)?"
+  sentb <- oNew $
+    snd $ splitGlyphs [9..12] $
+    svgTranslateTopLeftPerc (0.1,0) $
+    stdLaTeX $ "sentence\\ (bird\\ the\\ flies)?"
+  sentb' <- oNew $
+    snd $ splitGlyphs [9..12] $
+    svgTranslateTopLeftPerc (0.1,0) $
+    withColor "salmon" $
+    stdLaTeX $ "sentence\\ (bird\\ the\\ flies)?"
+  mapM oShow [sentr,sentb]
+
+  ruler <- oNew $
+    fst $ splitGlyphs [9..11] $
+    svgTranslateTopLeftPerc (0.1,lineThicknessThin) $
+    stdLaTeX $ "sentence\\ (the\\ X\\ Y)\\ \\vdash..."
+  ruleb <- oNew $
+    snd $ splitGlyphs [9..11] $
+    svgTranslateTopLeftPerc (0.1,lineThicknessThin) $
+    stdLaTeX $ "sentence\\ (the\\ X\\ Y)\\ \\vdash..."
+  ruleb' <- oNew $
+    snd $ splitGlyphs [9..11] $
+    svgTranslateTopLeftPerc (0.1,lineThicknessThin) $
+    withColor "salmon" $
+    stdLaTeX $ "sentence\\ (the\\ X\\ Y)\\ \\vdash..."
+  waitOn $ mapM (fork . flip oShowWith oFadeIn) [ruler,ruleb]
+
+  mapM oHide [sentb,ruleb]
+  mapM (fork . flip oShowWith wiggleAnim) [sentb', ruleb']

@@ -7,6 +7,9 @@ import Control.Lens
 import Control.Monad
 import Data.Text (Text)
 
+lineThicknessThin = 0.12
+lineThicknessThick = 0.15
+
 animateMain :: IO ()
 animateMain = putStrLn "Animating..." >> (reanimate  $ animation)
 --animateMain = reanimate $ addStatic (mkBackground "cyan") $ staticFrame 1 $ scale 3 $ center $ latexAlign "E = mc^2"
@@ -37,6 +40,19 @@ moveAbsPerc :: Object s a -> Duration -> (Double, Double) -> Scene s ()
 moveAbsPerc obj d (rx, ry) = oTweenS obj d $ \t -> do
   oLeftX %= \origin -> fromToS origin (screenLeft + screenWidth * rx) t
   oTopY %= \origin -> fromToS origin (screenTop - screenHeight * ry) t
+
+moveAbsPercY :: Object s a -> Duration -> Double -> Scene s ()
+moveAbsPercY obj d ry = oTweenS obj d $ \t -> do
+  oTopY %= \origin -> fromToS origin (screenTop - screenHeight * ry) t
+
+moveCenterAbsPerc :: Object s a -> Duration -> (Double, Double) -> Scene s ()
+moveCenterAbsPerc obj d (rx, ry) = oTweenS obj d $ \t -> do
+  oCenterX %= \origin -> fromToS origin (screenLeft + screenWidth * rx) t
+  oCenterY %= \origin -> fromToS origin (screenTop - screenHeight * ry) t
+
+moveCenterAbsPercX :: Object s a -> Duration -> Double -> Scene s ()
+moveCenterAbsPercX obj d rx = oTweenS obj d $ \t -> do
+  oCenterX %= \origin -> fromToS origin (screenLeft + screenWidth * rx) t
 
 --Taken from example
 highlightE :: Effect
@@ -72,6 +88,13 @@ whiteOutl = withStrokeColor "white"
 white :: SVG -> SVG
 white = whiteFill . whiteOutl
 
+withColor :: String -> SVG -> SVG
+withColor c = withFillColor c . withStrokeColor c
+
+--doesn't work
+oColor :: String -> SVG -> Animation
+oColor c svg = animate $ const $ withColor c svg
+
 stdLaTeX :: Text -> SVG
 stdLaTeX = withStrokeWidth 0.001 . white . center . latexAlign
 
@@ -86,6 +109,45 @@ env = addStatic bg
 
 bg :: SVG
 bg = mkBackground "black"
+
+--magic 0.5 is the standart margin. UNSAFE! TODO
+svgTranslateTopLeftPerc :: (Double, Double) -> SVG -> SVG
+svgTranslateTopLeftPerc (rx, ry) svg =
+  translate (-minx-(screenWidth/2)+(screenWidth*rx)+0.5) (-miny+(screenHeight/2)-(screenHeight*ry)-height-0.5) svg
+  where
+    (minx,miny,width,height) = boundingBox svg
+    (x,y) = relCoords (rx, ry)
+
+relCoords :: (Double, Double) -> (Double, Double)
+relCoords (x,y) = (screenLeft + screenWidth * x, screenTop - screenHeight * y)
+
+setTopLeftPerc :: (Double, Double) -> Object s a -> Scene s ()
+setTopLeftPerc (rx,ry) obj = oModifyS obj $ do
+  let (x,y) = relCoords (rx,ry)
+  oLeftX .= x
+  oTopY .= y
+
+setTopLeftPercY :: Double -> Object s a -> Scene s ()
+setTopLeftPercY ry obj = oModifyS obj $ do
+  let (x,y) = relCoords (0,ry)
+  oTopY .= y
+
+setCenterPerc :: (Double,Double) -> Object s a -> Scene s ()
+setCenterPerc (rx,ry) obj = oModifyS obj $ do
+  let (x,y) = relCoords (rx,ry)
+  oCenterX .= x
+  oCenterY .= y
+
+setCenterPercX :: Double -> Object s a -> Scene s ()
+setCenterPercX rx obj = oModifyS obj $ do
+  let (x,y) = relCoords (rx,0)
+  oCenterX .= x
+
+oNewTup :: (SVG,SVG) -> Scene s (Object s SVG, Object s SVG)
+oNewTup (a,b) = do
+  ao <- oNew a
+  bo <- oNew b
+  return (ao,bo)
 
 
 {-
