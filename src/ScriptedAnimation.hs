@@ -13,8 +13,8 @@ initialProblem :: Animation
 initialProblem = scene $ do
   bird <- oNew $ stdLaTeX "bird\\ is\\ a\\ noun"
   pers <- oNew $ stdLaTeX "person\\ is\\ a\\ noun"
-  flyi <- oNew $ stdLaTeX "fly\\ is\\ a\\ predicate"
-  driv <- oNew $ stdLaTeX "drive\\ is\\ a\\ predicate"
+  flyi <- oNew $ stdLaTeX "flies\\ is\\ a\\ verb"
+  driv <- oNew $ stdLaTeX "drives\\ is\\ a\\ verb"
   sent <- oNew $ stdLaTeX $ "&sentence\\ (the\\ X\\ Y)\\ \\vdash\\\\ &\\qquad X\\ is\\ a\\ noun,\\ Y\\ is\\ a\\ verb"
   let lst = [bird,pers, flyi,driv,sent]
   let lineThicknessThin = 0.12
@@ -97,6 +97,72 @@ initialProblem = scene $ do
   mapM oShow [sentr2,sentx2,ruler2,rulex2, tailr2, tailx2,tailnoun2]
   waitOn $ mapM (fork . flip oShowWith wiggleAnim) [sentx2,rulex2,tailx2,tailnoun2]
   --mapM oHide [sentr2,sentx2,ruler2,rulex2, tailr2, tailx2,tailnoun2]
+  setTopLeftPerc (lineThicknessThin,lineThicknessThin*3) bird
+  setTopLeftPerc (lineThicknessThin,lineThicknessThin*4) pers
+  oShow bird
+  oShow pers
+  wait 1
+  mapM oHide [sentr2,sentx2,ruler2,rulex2, tailr2, tailx2,tailnoun2]
+
+  (sentrb, sentxb) <- oNewTup $ splitGlyphs [12..15] $
+    svgTranslateTopLeftPerc (0,0) $
+    stdLaTeX $ "sentence\\ (the\\ bird\\ Y)?"
+  (rulerb, rulexb) <- oNewTup $ splitGlyphs [12..15] $
+    svgTranslateTopLeftPerc (0,lineThicknessThin) $
+    stdLaTeX $ "sentence\\ (the\\ bird\\ Y)\\ \\vdash"
+  (tailrb, tailxb) <- oNewTup $ splitGlyphs ([0..3]) $
+    svgTranslateTopLeftPerc (lineThicknessThin,lineThicknessThin*2) $
+    stdLaTeX $ "bird\\ is\\ a\\ noun,\\ Y\\ is\\ a\\ verb"
+
+  mapM oShow [sentrb,sentxb,rulerb,rulexb, tailrb, tailxb]
+  waitOn $ mapM (fork . flip oShowWith wiggleAnim) [sentxb,rulexb,tailxb]
+  mapM (fork . flip oHideWith oFadeOut) [bird,pers]
+  --mapM oHide [sentr,sentx,ruler,rulex, tailr, tailx,tailnoun]
+  mapM oHide [tailrb,tailxb]
+
+  newtail <- oNew $ stdLaTeX $ "bird\\ is\\ a\\ noun,\\ Y\\ is\\ a\\ verb"
+  oShow newtail
+  setTopLeftPerc (lineThicknessThin,lineThicknessThin*2) newtail
+  moveAbsPerc newtail 1 (lineThicknessThin/2,lineThicknessThin*2)
+
+  let offset = 4
+  setTopLeftPerc (lineThicknessThin*offset,lineThicknessThin*3) flyi
+  setTopLeftPerc (lineThicknessThin*offset,lineThicknessThin*4) driv
+  oShow flyi
+  oShow driv
+  wait 1
+
+  (sentr2y, sentx2y) <- oNewTup $ splitGlyphs [16..20] $
+    svgTranslateTopLeftPerc (0,0) $
+    stdLaTeX $ "sentence\\ (the\\ bird\\ flies)?"
+  (ruler2y, rulex2y) <- oNewTup $ splitGlyphs [16..20] $
+    svgTranslateTopLeftPerc (0,lineThicknessThin) $
+    stdLaTeX $ "sentence\\ (the\\ bird\\ flies)\\ \\vdash"
+  (tailr2y, tailx2y) <- oNewTup $ splitGlyphs ([12..16]++[20..23]) $
+    svgTranslateTopLeftPerc (lineThicknessThin/2,lineThicknessThin*2) $
+    stdLaTeX $ "bird\\ is\\ a\\ noun,\\ flies\\ is\\ a\\ verb"
+  (_, tailx2y) <- oNewTup $ splitGlyphs ([12..16]) $
+    svgTranslateTopLeftPerc (lineThicknessThin/2,lineThicknessThin*2) $
+    stdLaTeX $ "bird\\ is\\ a\\ noun,\\ flies\\ is\\ a\\ verb"
+  (_, tailnoun2y) <- oNewTup $ splitGlyphs ([20..23]) $
+    svgTranslateTopLeftPerc (lineThicknessThin/2,lineThicknessThin*2) $
+    stdLaTeX $ "bird\\ is\\ a\\ noun,\\ flies\\ is\\ a\\ verb"
+  mapM oHide [sentrb,sentxb,rulerb,rulexb, tailrb, tailxb, newtail]
+  mapM oShow [sentr2y,sentx2y,ruler2y,rulex2y, tailr2y, tailx2y,tailnoun2y]
+  waitOn $ mapM (fork . flip oShowWith wiggleAnim) [sentx2y,rulex2y,tailx2y,tailnoun2y]
+  wait 1
+
+  sent6 <- oNew $ stdLaTeX $ "sentence\\ (the\\ bird\\ flies)."
+  setTopLeftPerc (0,0) sent6
+
+  mapM (flip oHideWith oFadeOut) [driv, flyi]
+  waitOn $ mapM (fork . flip oHideWith oFadeOut) [tailr2y, tailx2y,tailnoun2y]
+  waitOn $ mapM (fork . flip oHideWith oFadeOut) [ruler2y,rulex2y]
+  oShow sent6
+  mapM oHide [sentr2y,sentx2y]
+  wait 1
+  moveAbsPerc sent6 1 (0.12,0.4)
+
 
   wait 10
 
