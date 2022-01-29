@@ -1,0 +1,14 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.inkscape.org/namespaces/inkscape" xmlns:ns2="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:ns3="http://www.w3.org/1999/xlink" width="35.776218mm" height="12.768738mm" viewBox="0 0 35.776218 12.768738" version="1.1" id="svg5" ns1:version="1.1.1 (3bf5ae0d25, 2021-09-20)" ns2:docname="assets.svg">
+  <ns2:namedview id="namedview7" pagecolor="#505050" bordercolor="#eeeeee" borderopacity="1" ns1:pageshadow="0" ns1:pageopacity="0" ns1:pagecheckerboard="0" ns1:document-units="mm" showgrid="false" ns1:snap-nodes="false" ns1:snap-others="true" ns1:zoom="1.4142136" ns1:cx="159.45258" ns1:cy="194.10081" ns1:window-width="1920" ns1:window-height="1016" ns1:window-x="0" ns1:window-y="0" ns1:window-maximized="1" ns1:current-layer="layer9" ns1:snap-center="true" />
+  <ns0:defs id="defs2">
+    <ns0:linearGradient ns1:collect="always" id="linearGradient66162">
+      <ns0:stop style="stop-color:#1ead00;stop-opacity:1" offset="0" id="stop66158" />
+      <ns0:stop style="stop-color:#000000;stop-opacity:0;" offset="1" id="stop66160" />
+    </ns0:linearGradient>
+    <ns0:linearGradient ns1:collect="always" ns3:href="#linearGradient66162" id="linearGradient66164" x1="58.871605" y1="17.120041" x2="64.862465" y2="17.030125" gradientUnits="userSpaceOnUse" />
+  </ns0:defs>
+  <ns0:g ns1:groupmode="layer" id="layer6" ns1:label="Layer 5" transform="translate(-29.086251,-7.9878846)">
+    <ns0:rect style="fill:#e9e9e9;fill-opacity:1;stroke:#ffffff;stroke-width:0.529167;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" id="rect68216-7" width="7.071403" height="3.4584451" x="48.948174" y="8.3187428" ry="0.77995461" />
+    <ns0:text xml:space="preserve" style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;stroke-width:0.264583" x="51.557575" y="11.338454" id="text73918-5"><ns0:tspan ns2:role="line" id="tspan73916-3" style="stroke-width:0.264583" x="51.557575" y="11.338454">!</ns0:tspan></ns0:text>
+  </ns0:g>
+  </ns0:svg>

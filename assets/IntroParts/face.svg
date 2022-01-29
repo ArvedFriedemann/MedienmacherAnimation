@@ -1,0 +1,14 @@
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.inkscape.org/namespaces/inkscape" xmlns:ns2="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:ns3="http://www.w3.org/1999/xlink" width="35.776218mm" height="12.768738mm" viewBox="0 0 35.776218 12.768738" version="1.1" id="svg5" ns1:version="1.1.1 (3bf5ae0d25, 2021-09-20)" ns2:docname="assets.svg">
+  <ns2:namedview id="namedview7" pagecolor="#505050" bordercolor="#eeeeee" borderopacity="1" ns1:pageshadow="0" ns1:pageopacity="0" ns1:pagecheckerboard="0" ns1:document-units="mm" showgrid="false" ns1:snap-nodes="false" ns1:snap-others="true" ns1:zoom="1.4142136" ns1:cx="159.45258" ns1:cy="194.10081" ns1:window-width="1920" ns1:window-height="1016" ns1:window-x="0" ns1:window-y="0" ns1:window-maximized="1" ns1:current-layer="layer9" ns1:snap-center="true" />
+  <ns0:defs id="defs2">
+    <ns0:linearGradient ns1:collect="always" id="linearGradient66162">
+      <ns0:stop style="stop-color:#1ead00;stop-opacity:1" offset="0" id="stop66158" />
+      <ns0:stop style="stop-color:#000000;stop-opacity:0;" offset="1" id="stop66160" />
+    </ns0:linearGradient>
+    <ns0:linearGradient ns1:collect="always" ns3:href="#linearGradient66162" id="linearGradient66164" x1="58.871605" y1="17.120041" x2="64.862465" y2="17.030125" gradientUnits="userSpaceOnUse" />
+  </ns0:defs>
+  <ns0:g ns1:groupmode="layer" id="layer4" ns1:label="Layer 3" transform="translate(-29.086251,-7.9878846)">
+    <ns0:path style="fill:#343434;fill-opacity:1;stroke:#ffffff;stroke-width:0.529167;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" id="path66491" ns2:type="arc" ns2:cx="35.324009" ns2:cy="11.389619" ns2:rx="3.7967966" ns2:ry="3.7967966" ns2:start="0" ns2:end="5.4709318" ns2:arc-type="slice" d="m 39.120806,11.389619 a 3.7967966,3.7967966 0 0 1 -3.031094,3.718785 3.7967966,3.7967966 0 0 1 -4.25366,-2.218845 3.7967966,3.7967966 0 0 1 1.315417,-4.6137374 3.7967966,3.7967966 0 0 1 4.784221,0.3579338 l -2.611681,2.7558636 z" transform="rotate(8.8614967)" />
+    <ns0:circle style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.79083;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" id="path67578" cx="31.751225" cy="15.302877" r="0.39174643" />
+  </ns0:g>
+  </ns0:svg>
