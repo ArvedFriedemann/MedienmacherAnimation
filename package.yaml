@@ -24,6 +24,7 @@ dependencies:
 - reanimate
 - lens
 - text
+- reanimate-svg
 
 library:
   source-dirs: src

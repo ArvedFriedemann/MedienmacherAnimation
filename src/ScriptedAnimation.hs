@@ -7,6 +7,10 @@ import Reanimate.Scene
 import Control.Lens
 import Control.Monad
 import Data.Text (Text)
+import Graphics.SvgTree
+import System.IO.Unsafe
+import Data.Maybe
+import Debug.Trace
 
 markingColor = "yellow"
 
@@ -195,9 +199,15 @@ interlude = scene $ do
   setCenterPerc (0.5,0.5) sent4
   oShowWith sent4 oFadeIn
   waitOn $ mapM (fork . flip oHideWith oFadeOut) [sent1,sent2,sent3]
+  oHideWith sent4 (reverseA . oDraw)
 
 checkExample :: Animation
 checkExample = scene $ do
+  sent <- oNew $ stdLaTeX $ "sentence\\ (bird\\ the\\ flies)?"
+  oShowWith sent oDraw
+  moveAbsPerc sent 1 (0.1,0)
+  oHide sent
+
   sentr <- oNew $
     fst $ splitGlyphs [9..12] $
     svgTranslateTopLeftPerc (0.1,0) $
@@ -231,6 +241,8 @@ checkExample = scene $ do
   mapM oHide [sentb,ruleb]
   mapM (fork . flip oShowWith wiggleAnim) [sentb', ruleb']
 
+  waitOn $ mapM (fork . flip oHideWith (reverseA . oDraw)) [sentr, sentb', ruler,ruleb']
+
 completionExample :: Animation
 completionExample = scene $ do
   bird <- oNew $ stdLaTeX "bird\\ is\\ a\\ noun"
@@ -241,8 +253,9 @@ completionExample = scene $ do
   let lst = [bird,pers, flyi,driv,sent]
 
   sent2 <- oNew $ stdLaTeX $ "sentence\\ (the\\ bird\\ Y)?"
-  setTopLeftPerc (0.3,0) sent2
-  fork $ oShow sent2
+  setCenterPerc (0.5,0.5) sent2
+  oShowWith sent2 oDraw
+  moveAbsPerc sent2 1 (0,0)
 
   sent3 <- oNew $ stdLaTeX $ "sentence\\ (the\\ X\\ Y)\\ \\vdash"
   fork $ moveAbsPerc sent2 1 (0,0)
@@ -342,3 +355,72 @@ completionExample = scene $ do
   mapM oHide [sentr2y, sentx2y]
   oShow sent6
   moveCenterAbsPerc sent6 1 (0.5,0.5)
+
+
+intro :: Animation
+intro = scene $ do
+  let computerScale = 0.4
+  numbers <- oNew $ scale computerScale $ center $ loadSVG "./assets/IntroParts/numbers.svg"
+  computer <- oNew $ scale computerScale $ center $ loadSVG "./assets/IntroParts/computer.svg"
+  computerAnswer <- oNew $ scale computerScale $ center $ loadSVG "./assets/IntroParts/computerAnswer.svg"
+  computerTouch <- oNew $ scale computerScale $ center $ loadSVG "./assets/IntroParts/computerTouch.svg"
+
+  let faceScale = 0.3
+  face <- oNew $ scale faceScale $ center $ loadSVG "./assets/IntroParts/face.svg"
+  finger <- oNew $ scale faceScale $ center $ loadSVG "./assets/IntroParts/finger.svg"
+
+  question <- oNew $ scale computerScale $ center $ loadSVG "./assets/IntroParts/question.svg"
+  answer <- oNew $ scale computerScale $ center $ loadSVG "./assets/IntroParts/answer.svg"
+
+  let lst = [computer, computerAnswer, computerTouch, numbers, face, finger, question, answer]
+  {-}
+  forM (zip lst [(x*0.2,y*0.2) | x <- [1..4], y<- [1..4]]) $ \(o,i) -> do
+    setCenterPerc i o
+    oShow o
+  wait 1
+  -}
+
+  oShowWith computer oDraw
+  setCenterPerc (0.62,0.5) numbers
+  oShowWith numbers (setDuration 1 . oDraw)
+  oHideWith numbers (reverseA . setDuration 1 . oDraw)
+
+  let leftX = 0.7
+  let rightX = 0.2
+  moveCenterAbsPerc computer 1 (leftX,0.5)
+  setCenterPerc (rightX,0.5) face
+  oShowWith face oFadeIn
+
+  let rightOffset = 0.15
+  setCenterPerc (rightX+rightOffset,0.5-0.1) question
+  waitOn $ do
+    fork $ oShowWith question oFadeIn
+    fork $ moveCenterAbsPerc question 1 (rightX+rightOffset,0.5-0.2)
+
+  setCenterPerc (leftX, 0.5-0.22) answer
+  waitOn $ do
+    fork $ oShowWith answer oFadeIn
+    fork $ moveCenterAbsPerc answer 1 (leftX,0.5-0.3)
+
+  oHide question
+  oHide answer
+
+  setCenterPerc (leftX,0.5) computerTouch
+  setCenterPerc (leftX-0.1,0.5+0.06) finger
+  oHide computer
+  oShow computerTouch
+  oShow finger
+  moveCenterAbsPerc finger 1 (leftX-0.1,0.45)
+  moveCenterAbsPerc finger 1 (leftX-0.1,0.5+0.06)
+  moveCenterAbsPerc finger 1 (leftX-0.15,0.5+0.06)
+  moveCenterAbsPerc finger 1 (leftX-0.1,0.5+0.06)
+  fork $ oShowWith face $ setDuration 2 . (\svg -> animate $ \t -> rotate (t*20) svg)
+  wait 1
+  setCenterPerc (leftX,0.5) computerAnswer
+  oHide computerTouch
+  oShow computerAnswer
+  wait 1
+
+--does not work with gradients for some weird reason...
+loadSVG :: FilePath -> SVG
+loadSVG path = flipYAxis $ last $ _documentElements $ fromJust $ unsafePerformIO $ loadSvgFile path
