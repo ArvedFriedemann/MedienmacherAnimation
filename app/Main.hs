@@ -8,4 +8,5 @@ main :: IO ()
 --main = animateMain
 --main = reanimate $ env $ initialProblem
 --main = reanimate $ env $ interlude
-main = reanimate $ env $ checkExample
+--main = reanimate $ env $ checkExample
+main = reanimate $ env $ completionExample
