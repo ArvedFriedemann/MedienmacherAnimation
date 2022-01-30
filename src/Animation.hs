@@ -155,7 +155,7 @@ waitSafeUntil tNew = do
   let t = tNew - now
   if t >= 0
   then wait t
-  else error $ "Missed time stamp at "++(show now)++"(missed by "++show t++" seconds)"
+  else error $ "Missed time stamp at "++(show tNew)++" (missed by "++show t++" seconds)"
 
 {-
 animation :: Animation

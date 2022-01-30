@@ -14,8 +14,8 @@ import Debug.Trace
 
 markingColor = "yellow"
 
-title :: Animation
-title = scene $ do
+title :: Scene s ()
+title = spriteScope $ do
   tit <- oNew $ stdLaTeX "Computer\\ verstehen"
   tit2 <- oNew $ scale 0.8 $ stdLaTeX "mal\\ anders..."
   tit3 <- oNew $ scale 0.5 $ stdLaTeX "Arved\\ Friedemann"
@@ -33,8 +33,8 @@ title = scene $ do
   waitSafeUntil 4
 
 
-intro :: Animation
-intro = scene $ do
+intro :: Scene s ()
+intro = spriteScope $ do
   let computerScale = 0.4
   numbers <- oNew $ scale computerScale $ center $ loadSVG "./assets/IntroParts/numbers.svg"
   computer <- oNew $ scale computerScale $ center $ loadSVG "./assets/IntroParts/computer.svg"
@@ -111,8 +111,8 @@ intro = scene $ do
   wait 1
 
 
-initialProblem :: Animation
-initialProblem = scene $ do
+initialProblem :: Scene s ()
+initialProblem = spriteScope $ do
   bird <- oNew $ stdLaTeX "bird\\ is\\ a\\ noun"
   pers <- oNew $ stdLaTeX "person\\ is\\ a\\ noun"
   flyi <- oNew $ stdLaTeX "flies\\ is\\ a\\ verb"
@@ -212,9 +212,12 @@ initialProblem = scene $ do
   mapM oHide [sent3,sent4,sent5]
   mapM oShow [sentr,sentx,ruler,rulex, tailr, tailx,tailnoun]
   waitOn $ mapM (fork . flip oShowWith wiggleAnim) [sentx,rulex,tailx,tailnoun]
-  mapM oHide [sentr,sentx,ruler,rulex, tailr, tailx,tailnoun]
+
 
   waitSafeUntil $ 60*2+40
+
+  mapM oHide [sentr,sentx,ruler,rulex, tailr, tailx,tailnoun]
+
 
   (sentr2, sentx2) <- oNewTup $ splitGlyphs [13] $
     svgTranslateTopLeftPerc (0,0) $
@@ -302,7 +305,6 @@ initialProblem = scene $ do
   waitOn $ mapM (fork . flip oShowWith wiggleAnim) [sentx2y,rulex2y,tailx2y,tailnoun2y]
   wait 1
 
-  waitSafeUntil $ 60*3+18
 
   sent6 <- oNew $ stdLaTeX $ "sentence\\ (the\\ bird\\ flies)."
   setTopLeftPerc (0,0) sent6
@@ -311,12 +313,14 @@ initialProblem = scene $ do
   waitOn $ mapM (fork . flip oHideWith oFadeOut) [ruler2y,rulex2y,tailr2y, tailx2y,tailnoun2y]
   oShow sent6
   mapM oHide [sentr2y,sentx2y]
-  wait 1
+
+  waitSafeUntil $ 60*3+18
+
   moveCenterAbsPerc sent6 1 (0.5,0.5)
 
 
-interlude :: Animation
-interlude = scene $ do
+interlude :: Scene s ()
+interlude = spriteScope $ do
   waitSafeUntil $ 60*3+20
 
   sent1 <- oNew $ stdLaTeX $ "sentence\\ (the\\ bird\\ flies)."
@@ -353,10 +357,10 @@ interlude = scene $ do
   waitSafeUntil $ 60*3+54
 
   waitOn $ mapM (fork . flip oHideWith oFadeOut) [sent1,sent2,sent3]
-  oHideWith sent4 (reverseA . oDraw)
+  oHideWith sent4 (setDuration 2 . reverseA . oDraw)
 
-checkExample :: Animation
-checkExample = scene $ do
+checkExample :: Scene s ()
+checkExample = spriteScope $ do
   waitSafeUntil $ 60*3+58
 
   waitSafeUntil $ 60*4+9
@@ -364,9 +368,11 @@ checkExample = scene $ do
   sent <- oNew $ stdLaTeX $ "sentence\\ (bird\\ the\\ flies)?"
   oShowWith sent oDraw
   moveAbsPerc sent 1 (0.1,0)
-  oHide sent
+
 
   waitSafeUntil $ 60*4+21
+
+  oHide sent
 
   sentr <- oNew $
     fst $ splitGlyphs [9..12] $
@@ -403,13 +409,12 @@ checkExample = scene $ do
   mapM oHide [sentb,ruleb]
   mapM (fork . flip oShowWith wiggleAnim) [sentb', ruleb']
 
-  waitOn $ mapM (fork . flip oHideWith (reverseA . oDraw)) [sentr, sentb', ruler,ruleb']
-
   waitSafeUntil $ 60*4+41
+  waitOn $ mapM (fork . flip oHideWith (reverseA . oDraw)) [sentr, sentb', ruler,ruleb']
   --TODO: make false appear!
 
-completionExample :: Animation
-completionExample = scene $ do
+completionExample :: Scene s ()
+completionExample = spriteScope $ do
   waitSafeUntil $ 60*4+47
 
   waitSafeUntil $ 60*5+4
