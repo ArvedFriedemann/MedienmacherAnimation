@@ -11,4 +11,4 @@ main :: IO ()
 --main = reanimate $ env $ checkExample
 --main = reanimate $ env $ completionExample
 --main = reanimate $ env $ intro
-main = reanimate $ env $ (foldr1 seqA [intro,initialProblem,interlude,checkExample,completionExample])
+main = reanimate $ env $ (foldr1 seqA [title,intro,initialProblem,interlude,checkExample,completionExample])

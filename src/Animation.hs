@@ -149,6 +149,13 @@ oNewTup (a,b) = do
   bo <- oNew b
   return (ao,bo)
 
+waitSafeUntil :: Time -> Scene s ()
+waitSafeUntil tNew = do
+  now <- queryNow
+  let t = tNew - now
+  if t >= 0
+  then wait t
+  else error $ "Missed time stamp at "++(show now)++"(missed by "++show t++" seconds)"
 
 {-
 animation :: Animation
